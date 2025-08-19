@@ -4,7 +4,6 @@ import { useApi } from '@/lib/api';
 import { Quote } from '@/types/business';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 // Placeholder for QuotePDFDocument (to be implemented)
 const QuotePDFDocument = ({ quote }: any) => null;

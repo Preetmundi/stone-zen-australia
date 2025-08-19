@@ -1,6 +1,7 @@
 import { useAuth } from '../hooks/use-auth';
 
-export async function apiFetch(url, { method = 'GET', body, token } = {}) {
+export async function apiFetch(url: string, options: { method?: string; body?: any; token?: string } = {}) {
+  const { method = 'GET', body, token } = options;
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
   const res = await fetch(url, {
@@ -15,9 +16,9 @@ export async function apiFetch(url, { method = 'GET', body, token } = {}) {
 export function useApi() {
   const { token } = useAuth();
   return {
-    get: (url) => apiFetch(url, { method: 'GET', token }),
-    post: (url, body) => apiFetch(url, { method: 'POST', body, token }),
-    put: (url, body) => apiFetch(url, { method: 'PUT', body, token }),
-    del: (url) => apiFetch(url, { method: 'DELETE', token }),
+    get: (url: string) => apiFetch(url, { method: 'GET', token }),
+    post: (url: string, body: any) => apiFetch(url, { method: 'POST', body, token }),
+    put: (url: string, body: any) => apiFetch(url, { method: 'PUT', body, token }),
+    del: (url: string) => apiFetch(url, { method: 'DELETE', token }),
   };
 }

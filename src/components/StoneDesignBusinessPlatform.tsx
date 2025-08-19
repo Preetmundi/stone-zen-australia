@@ -182,7 +182,7 @@ const MaterialCalculatorService = {
 };
 
 // Main Business Platform Component
-export const StoneDesignBusinessPlatform: React.FC = () => {
+const StoneDesignBusinessPlatform: React.FC = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'projects' | 'customers' | 'quotes' | 'materials' | 'settings'>('dashboard');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -471,3 +471,5 @@ export const StoneDesignBusinessPlatform: React.FC = () => {
     </div>
   );
 };
+
+export default StoneDesignBusinessPlatform;
