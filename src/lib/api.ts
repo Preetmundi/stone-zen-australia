@@ -14,7 +14,9 @@ export async function apiFetch(url: string, options: { method?: string; body?: a
 }
 
 export function useApi() {
-  const { token } = useAuth();
+  const { session } = useAuth();
+  const token = session?.access_token;
+  
   return {
     get: (url: string) => apiFetch(url, { method: 'GET', token }),
     post: (url: string, body: any) => apiFetch(url, { method: 'POST', body, token }),

@@ -12,17 +12,22 @@ const Index = () => {
   if (loading) return <div>Loading...</div>;
 
   if (!user) {
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setError('');
       try {
+        let result;
         if (mode === 'login') {
-          await login(email, password);
+          result = await login(email, password);
         } else {
-          await register(email, password);
+          result = await register(email, password);
         }
-      } catch (err) {
-        setError(err.message);
+        
+        if (result.error) {
+          setError(result.error.message || 'Authentication failed');
+        }
+      } catch (err: any) {
+        setError(err.message || 'Authentication failed');
       }
     };
     return (
