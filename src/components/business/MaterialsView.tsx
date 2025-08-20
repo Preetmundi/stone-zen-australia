@@ -26,8 +26,9 @@ export const MaterialsView: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/materials');
-      setMaterials(data);
+      const { data, error } = await api.getMaterials();
+      if (error) throw error;
+      setMaterials(data || []);
     } catch (err) {
       setError('Failed to load materials');
     } finally {
@@ -45,7 +46,8 @@ export const MaterialsView: React.FC = () => {
   };
   const handleDelete = async (material: any) => {
     try {
-      await api.del(`/api/materials/${material.id}`);
+      const { error } = await api.deleteMaterial(material.id);
+      if (error) throw error;
       fetchMaterials();
     } catch {
       setError('Failed to delete material');
@@ -54,9 +56,11 @@ export const MaterialsView: React.FC = () => {
   const handleSave = async (material: any) => {
     try {
       if (material.id) {
-        await api.put(`/api/materials/${material.id}`, material);
+        const { error } = await api.updateMaterial(material.id, material);
+        if (error) throw error;
       } else {
-        await api.post('/api/materials', material);
+        const { error } = await api.createMaterial(material);
+        if (error) throw error;
       }
       fetchMaterials();
     } catch {

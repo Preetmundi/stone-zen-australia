@@ -41,8 +41,9 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/projects');
-      setProjects(data);
+      const { data, error } = await api.getProjects();
+      if (error) throw error;
+      setProjects(data || []);
     } catch (err) {
       setError('Failed to load projects');
     } finally {
@@ -68,11 +69,12 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   };
   const handleInlineSave = async (project: Project) => {
     try {
-      await api.put(`/api/projects/${project.id}`, {
+      const { error } = await api.updateProject(project.id, {
         ...project,
-        projectName: inlineEditName,
+        project_name: inlineEditName,
         status: inlineEditStatus,
       });
+      if (error) throw error;
       fetchProjects();
     } catch {
       setError('Failed to update project');
@@ -81,7 +83,8 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   };
   const handleDelete = async (project: Project) => {
     try {
-      await api.del(`/api/projects/${project.id}`);
+      const { error } = await api.deleteProject(project.id);
+      if (error) throw error;
       fetchProjects();
     } catch {
       setError('Failed to delete project');
@@ -90,9 +93,11 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   const handleSave = async (project: Project) => {
     try {
       if (project.id) {
-        await api.put(`/api/projects/${project.id}`, project);
+        const { error } = await api.updateProject(project.id, project);
+        if (error) throw error;
       } else {
-        await api.post('/api/projects', project);
+        const { error } = await api.createProject(project);
+        if (error) throw error;
       }
       fetchProjects();
     } catch {

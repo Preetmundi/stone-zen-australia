@@ -36,8 +36,9 @@ export const QuotesView: React.FC<QuotesViewProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/quotes');
-      setQuotes(data);
+      const { data, error } = await api.getQuotes();
+      if (error) throw error;
+      setQuotes(data || []);
     } catch (err) {
       setError('Failed to load quotes');
     } finally {
@@ -47,8 +48,8 @@ export const QuotesView: React.FC<QuotesViewProps> = ({
 
   const handleStatusChange = async (quoteId: string, newStatus: string) => {
     try {
-      const quote = quotes.find((q: any) => q.id === quoteId);
-      await api.put(`/api/quotes/${quoteId}`, { ...quote, status: newStatus });
+      const { error } = await api.updateQuote(quoteId, { status: newStatus });
+      if (error) throw error;
       fetchQuotes();
     } catch {
       setError('Failed to update quote status');

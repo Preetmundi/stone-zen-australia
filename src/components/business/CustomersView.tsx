@@ -41,8 +41,9 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/customers');
-      setCustomers(data);
+      const { data, error } = await api.getCustomers();
+      if (error) throw error;
+      setCustomers(data || []);
     } catch (err) {
       setError('Failed to load customers');
     } finally {
@@ -68,11 +69,12 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   };
   const handleInlineSave = async (customer: Customer) => {
     try {
-      await api.put(`/api/customers/${customer.id}`, {
+      const { error } = await api.updateCustomer(customer.id, {
         ...customer,
         name: inlineEditName,
-        customerType: inlineEditType,
+        customer_type: inlineEditType,
       });
+      if (error) throw error;
       fetchCustomers();
     } catch {
       setError('Failed to update customer');
@@ -81,7 +83,8 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   };
   const handleDelete = async (customer: Customer) => {
     try {
-      await api.del(`/api/customers/${customer.id}`);
+      const { error } = await api.deleteCustomer(customer.id);
+      if (error) throw error;
       fetchCustomers();
     } catch {
       setError('Failed to delete customer');
@@ -90,9 +93,11 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   const handleSave = async (customer: Customer) => {
     try {
       if (customer.id) {
-        await api.put(`/api/customers/${customer.id}`, customer);
+        const { error } = await api.updateCustomer(customer.id, customer);
+        if (error) throw error;
       } else {
-        await api.post('/api/customers', customer);
+        const { error } = await api.createCustomer(customer);
+        if (error) throw error;
       }
       fetchCustomers();
     } catch {

@@ -21,7 +21,8 @@ export const SettingsView: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/business-profile');
+      const { data, error } = await api.getBusinessProfile();
+      if (error) throw error;
       setForm(data || {});
     } catch (err) {
       setError('Failed to load business profile');
@@ -43,7 +44,8 @@ export const SettingsView: React.FC = () => {
     }
     setError(null);
     try {
-      await api.put('/api/business-profile', form);
+      const { error } = await api.updateBusinessProfile(form);
+      if (error) throw error;
       setSuccess(true);
     } catch {
       setError('Failed to save business profile');
